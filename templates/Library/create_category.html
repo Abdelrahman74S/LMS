@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container bg-light shadow-md p-5 form-layout">
+<h1>Create Category</h1>
+<form method="POST" action="{% url 'Library:create_category' %}" autocomplete="off">
+    {% csrf_token %}
+    {{ form }}
+    <button type="submit" class="btn btn-outline-primary">Create</button>
+</form>
+
+</div>
+
+
+{% endblock  %}

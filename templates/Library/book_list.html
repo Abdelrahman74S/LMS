@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% for book in books %}
+<div class="card" style="width: 18rem;">
+  <h5 class="card-title" style="font-size: 30px;">{{ book.title }}</h5>
+  <img src="{{ book.image.url }}" class="card-img-top" alt="{{ book.title }}">
+  <div class="card-body">
+    <p class="card-text">{{ book.description }}</p>
+    <a href="{{ book.pdf.url }}" target="_blank">📖 View PDF</a>
+    <a href="{% url 'Library:book_detail' book.pk %}">Datalist</a>
+  </div>
+</div>
+{% endfor %}
+{% endblock %}

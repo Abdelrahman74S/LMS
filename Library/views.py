@@ -1,0 +1,97 @@
+from django.shortcuts import render
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic import DetailView, ListView
+from .models import *
+from .form import *
+from django.urls import reverse_lazy
+
+
+# BOOK
+class CreateBOOK(CreateView):
+    model = Book
+    form_class = BookForm
+    template_name = 'Library/create_book.html'
+    success_url = reverse_lazy('Library:book_list')
+
+
+class BookListView(ListView):
+    model = Book
+    template_name = "Library/book_list.html"
+    context_object_name = "books"
+
+
+class BookDetailView(DetailView):
+    model = Book
+    template_name = "Library/book_detail.html"
+    context_object_name = "book" 
+
+class BookUpdateView(UpdateView):
+    model = Book
+    form_class = BookForm
+    template_name = "Library/update_book.html"
+    success_url = reverse_lazy("Library:book_list")
+
+
+class BookDeleteView(DeleteView):
+    model = Book
+    template_name = "Library/delete_book.html"
+    success_url = reverse_lazy("Library:book_list")
+
+
+# CATEGORY
+class CreateCategory(CreateView):
+    model = Category
+    form_class = CategoryForm
+    template_name = 'Library/create_category.html'
+    success_url = reverse_lazy('Library:book_list')
+
+
+class CategoryListView(ListView):
+    model = Category
+    template_name = "Library/category_list.html"
+    context_object_name = "categories"
+
+
+class CategoryUpdateView(UpdateView):
+    model = Category
+    form_class = CategoryForm
+    template_name = "Library/update_category.html"
+    success_url = reverse_lazy("category_list")
+
+
+class CategoryDeleteView(DeleteView):
+    model = Category
+    template_name = "Library/delete_category.html"
+    success_url = reverse_lazy("category_list")
+
+
+# BORROWING
+class CreateBorrowing(CreateView):
+    model = Borrowing
+    form_class = BorrowingForm
+    template_name = 'Library/create_borrowing.html'
+    success_url = reverse_lazy('borrowing_list')
+
+
+class BorrowingListView(ListView):
+    model = Borrowing
+    template_name = "Library/borrowing_list.html"
+    context_object_name = "borrowings"
+
+
+class BorrowingDetailView(DetailView):
+    model = Borrowing
+    template_name = "Library/borrowing_detail.html"
+
+
+class BorrowingUpdateView(UpdateView):
+    model = Borrowing
+    form_class = BorrowingForm
+    template_name = "Library/update_borrowing.html"
+    success_url = reverse_lazy("borrowing_list")
+
+
+class BorrowingDeleteView(DeleteView):
+    model = Borrowing
+    template_name = "Library/delete_borrowing.html"
+    success_url = reverse_lazy("borrowing_list")
