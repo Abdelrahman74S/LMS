@@ -1,15 +1,45 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% for book in books %}
-<div class="card" style="width: 18rem;">
-  <h5 class="card-title" style="font-size: 30px;">{{ book.title }}</h5>
-  <img src="{{ book.image.url }}" class="card-img-top" alt="{{ book.title }}">
-  <div class="card-body">
-    <p class="card-text">{{ book.description }}</p>
-    <a href="{{ book.pdf.url }}" target="_blank">📖 View PDF</a>
-    <a href="{% url 'Library:book_detail' book.pk %}">Datalist</a>
+
+
+
+<div class="container mt-5">
+  <div class="row">
+    <div>
+  <form method="get" action="{% url 'Library:filter' %}" class="d-flex mb-3">
+    <input class="form-control me-sm-2" type="search" name="q" placeholder="Search in books..." value="{{ request.GET.q }}">
+    <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+  </form>
+</div>
+    {% for book in books %}
+      <div class="col-md-4 mb-4">
+        <div class="card shadow-lg h-100">
+
+          {% if book.image %}
+            <img src="{{ book.image.url }}" class="card-img-top" alt="{{ book.title }}" style="height: 70%; object-fit: cover;">
+          {% endif %}
+          
+          <div class="card-body text-center">
+
+            <h5 class="card-title fw-bold" style="font-size: 22px;">{{ book.title }}</h5>
+            
+            <p class="card-text text-muted">{{ book.author }}</p>
+            
+            <div >
+              <a href="{% url 'Library:book_detail' book.pk %}" class="btn btn-outline-info">Details</a>
+              
+              <form method="post" action="{% url 'Library:delete_book' book.pk %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-danger">Delete</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <p class="text-center">No books available 📚</p>
+    {% endfor %}
   </div>
 </div>
-{% endfor %}
 {% endblock %}

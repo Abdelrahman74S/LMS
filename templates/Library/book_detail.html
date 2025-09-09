@@ -2,18 +2,32 @@
 
 {% block content %}
 
-<h1>{{ book.title }}</h1>
-<p>Author: {{ book.author }}</p>
-<p>Category: {{ book.category.name }}</p>
-<p>Description: {{ book.description }}</p>
-<p>Available copies: {{ book.copies_available }}</p>
-<p>Price : {{book.price}} $</p>
-{% if book.image %}
-  <img src="{{ book.image.url }}" alt="{{ book.title }}">
-{% endif %}
+<div class="container mt-4">
+  <div class="row">
+    <!-- صورة الكتاب -->
+    <div class="col-md-4">
+      {% if book.image %}
+        <img src="{{ book.image.url }}" alt="{{ book.title }}" class="img-fluid rounded shadow">
+      {% endif %}
+    </div>
 
-{% if book.pdf %}
-  <a href="{{ book.pdf.url }}" download >Download PDF</a>
-{% endif %}
-  
+    <!-- تفاصيل الكتاب -->
+    <div class="col-md-8">
+      <h1>{{ book.title }}</h1>
+      <p><strong>Author:</strong> {{ book.author }}</p>
+      <p><strong>Category:</strong> {{ book.category.name }}</p>
+      <p><strong>Description:</strong> {{ book.description }}</p>
+      <p><strong>Available copies:</strong> {{ book.copies_available }}</p>
+      <p><strong>Price:</strong> {{ book.price }} $</p>
+
+      {% if book.pdf %}
+        <a href="{% url 'Library:update_book' book.pk%}" class="btn btn-outline-secondary">update</a>
+        <a href="{{ book.pdf.url }}" target="_blank" class="btn btn-outline-success"> View PDF</a>
+        <a href="{{ book.pdf.url }}" class="btn btn-outline-light" download> Download PDF</a>
+        <a href="{% url 'Library:book_list' %}" class="btn btn-outline-secondary" style="display: block; width: 70px; margin-top: 4px;" >Back</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
 {% endblock %}

@@ -2,9 +2,15 @@
 
 {% block content %}
 
-<h1>hello</h1>
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 60vh; transform: scale(1.2);">
+  <div class="text-center">
+    <h2 class="mb-4">📚 Library Dashboard</h2>
+    <div class="d-flex justify-content-center gap-3">
+      <a href="{% url 'Library:book_list' %}" class="btn btn-primary">Book List</a>
+      <a href="{% url 'Library:create_book' %}" class="btn btn-secondary">Create Book</a>
+      <a href="{% url 'Library:create_category' %}" class="btn btn-success">Create Category</a>
+    </div>
+  </div>
+</div>
 
-<a href="{% url 'Library:book_list' %}">book list</a>
-<a href="{% url 'Library:create_book' %}">create book</a>
-
-{% endblock  %}
+{% endblock %}

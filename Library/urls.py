@@ -2,6 +2,7 @@ from django.urls import path
 from .views import *
 from django.conf import settings
 from django.conf.urls.static import static
+from . import views
 
 app_name = "Library"
 
@@ -25,5 +26,8 @@ urlpatterns = [
     path("borrowing/<int:pk>/", BorrowingDetailView.as_view(), name="borrowing_detail"),
     path("update-borrowing/<int:pk>/", BorrowingUpdateView.as_view(), name="update_borrowing"),
     path("delete-borrowing/<int:pk>/", BorrowingDeleteView.as_view(), name="delete_borrowing"),
+    
+    # filter
+    path('filter-books/',views.Book_Filter, name='filter')
 ]
 
