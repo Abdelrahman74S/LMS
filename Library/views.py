@@ -11,7 +11,6 @@ from django.contrib.auth.decorators import login_required
 
 # BOOK
 
-@login_required(login_url="/account/login/")
 class CreateBOOK(CreateView):
     model = Book
     form_class = BookForm

@@ -1,5 +1,5 @@
 from django.db import models 
-from django.contrib.auth.models import AbstractUser , Permission
+from django.contrib.auth.models import AbstractUser  , Group
 
 class MyUser(AbstractUser): 
     phone_number = models.CharField(max_length=11, blank=False, null=False) 
@@ -12,23 +12,37 @@ class MyUser(AbstractUser):
     
     account_type = models.CharField(max_length=10, choices=ACCOUNT_TYPES , default='customer')
 
+    # def save(self, *args, **kwargs):
+    #     super().save(*args, **kwargs)  
+
+    #     if self.account_type == 'customer':
+    #         perms = Permission.objects.filter(
+    #             codename__in=['can_borrow_books', 'can_view_books']
+    #         )
+    #         self.user_permissions.set(perms)
+
+    #     elif self.account_type == 'seller':
+    #         perms = Permission.objects.filter(
+    #             codename__in=['can_borrow_books', 'can_view_books','can_add_books', 'can_delete_books', 'can_update_books']
+    #         )
+    #         self.user_permissions.set(perms)
+    
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)  
+         # Before getting ID
+         is_new = self.pk is None
 
-        if self.account_type == 'customer':
-            perms = Permission.objects.filter(
-                codename__in=['can_borrow_books', 'can_view_books']
-            )
-            self.user_permissions.set(perms)
-
-        elif self.account_type == 'seller':
-            perms = Permission.objects.filter(
-                codename__in=['can_borrow_books', 'can_view_books','can_add_books', 'can_delete_books', 'can_update_books']
-            )
-            self.user_permissions.set(perms)
+         # After obtaining the ID   
+         super().save(*args, **kwargs)
+         if is_new:
+            if self.account_type == 'customer':
+               group = Group.objects.get(name='Customers')
+               self.groups.add(group)
+            elif self.account_type == 'seller':
+                group = Group.objects.get(name='Sellers')
+                self.groups.add(group)
 
     def __str__(self): 
-        return self.username
+        return self.username 
 
 # class Customer(MyUser):
 #     class Meta:
