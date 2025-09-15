@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5 text-center" style="max-width: 600px;">
+    <div class="card border-danger">
+        <div class="card-header bg-danger text-white">
+            <h3>Confirm Deletion</h3>
+        </div>
+        <div class="card-body">
+            <p class="card-text fs-5">
+                Are you sure you want to delete the category: <strong>"{{ category.name }}"</strong>?
+            </p>
+            <p class="text-muted">
+                <small>This action cannot be undone.</small>
+            </p>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-lg">Yes, Delete</button>
+                <a href="{% url 'Library:category_list' %}" class="btn btn-secondary btn-lg">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

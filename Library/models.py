@@ -1,5 +1,6 @@
 from django.db import models
 from account.models import MyUser
+from django.utils import timezone
 # Create your models here.
 
 
@@ -14,7 +15,7 @@ class Book(models.Model):
     title = models.CharField(max_length=60 , blank=False, null=False)
     author = models.CharField(max_length=60, blank=False, null=False)
     description = models.TextField(blank=False, null=False ,default='No description yet')
-    category = models.ForeignKey(Category,on_delete=models.CASCADE)
+    category = models.ForeignKey(Category,on_delete=models.PROTECT)
     published_date = models.DateTimeField(auto_now_add=True)
     price = models.DecimalField(max_digits=6, decimal_places=2)
     copies_available = models.IntegerField(blank=False, null=False)
@@ -24,19 +25,29 @@ class Book(models.Model):
     def __str__(self):
         return self.title
     
+# models.py
+
 class Borrowing(models.Model):
-    book = models.ForeignKey(Book,on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
     borrower = models.ForeignKey(MyUser, on_delete=models.CASCADE)
+    categoryBorrowing = models.ForeignKey(Category, on_delete=models.PROTECT, null=True, blank=True)
     borrow_date = models.DateTimeField(auto_now_add=True)
     return_date = models.DateTimeField(null=True, blank=True)
     due_date = models.DateTimeField()
     
-    STATUS_CHOICES = [
-    ('borrowed', 'Borrowed'),
-    ('returned', 'Returned'),
-    ('late', 'Late'),
-]
-    status = models.CharField(max_length=20, choices= STATUS_CHOICES ,default='borrowed')
+    
+    class Meta:
+        ordering = ['-borrow_date']
+        
+    @property
+    def status(self):
+        if self.return_date:
+            return 'Returned' 
+        
+        if timezone.now() > self.due_date:
+            return 'Late'
+        
+        return 'Borrowed'
     
     def __str__(self):
-            return f"{self.borrower.username} borrowed {self.book.title}"
+        return f"{self.borrower.username} borrowed {self.book.title}"

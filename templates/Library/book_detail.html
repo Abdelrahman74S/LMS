@@ -4,14 +4,12 @@
 
 <div class="container mt-4">
   <div class="row">
-    <!-- صورة الكتاب -->
     <div class="col-md-4">
       {% if book.image %}
         <img src="{{ book.image.url }}" alt="{{ book.title }}" class="img-fluid rounded shadow">
       {% endif %}
     </div>
 
-    <!-- تفاصيل الكتاب -->
     <div class="col-md-8">
       <h1>{{ book.title }}</h1>
       <p><strong>Author:</strong> {{ book.author }}</p>
@@ -21,9 +19,29 @@
       <p><strong>Price:</strong> {{ book.price }} $</p>
 
       {% if book.pdf %}
-        <a href="{% url 'Library:update_book' book.pk%}" class="btn btn-outline-secondary">update</a>
+      
+      {% if user.account_type == 'seller' %}
+      <a href="{% url 'Library:update_book' book.pk%}" class="btn btn-outline-secondary">update</a>
+      
+      {% endif %}
+        {% if book.copies_available > 0 %}
+    {% if user_has_borrowed_book %}
+        <p class="text-muted">You have already borrowed this book.</p>
+    {% else %}
+        <form action="{% url 'Library:create_borrowing' book_pk=book.pk %}" method="POST" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success">Borrow Now (1-Click)</button>
+        </form>
+    {% endif %}
+{% else %}
+    <p class="text-danger">Sorry, no copies are available at the moment.</p>
+{% endif %}
+        
+        {% if user_has_borrowed_book %}
+        <a href="{% url 'Library:retrieve_book' book.pk%}" class="btn btn-outline-secondary">retrieve book</a>
         <a href="{{ book.pdf.url }}" target="_blank" class="btn btn-outline-success"> View PDF</a>
-        <a href="{{ book.pdf.url }}" class="btn btn-outline-light" download> Download PDF</a>
+        {% endif %}
+
         <a href="{% url 'Library:book_list' %}" class="btn btn-outline-secondary" style="display: block; width: 70px; margin-top: 4px;" >Back</a>
       {% endif %}
     </div>

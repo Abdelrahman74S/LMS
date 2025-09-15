@@ -10,10 +10,12 @@ class CategoryForm (forms.ModelForm):
 class BookForm (forms.ModelForm):
     class Meta:
         model = Book
-        fields = "__all__"
+        fields = [
+            'title','author','description','category','price','copies_available','pdf' , 'image'
+        ]
     
 class BorrowingForm (forms.ModelForm):
     class Meta:
         model = Borrowing
-        fields = "__all__"
+        fields = []
     

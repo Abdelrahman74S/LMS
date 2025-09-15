@@ -5,11 +5,11 @@
 {% block content %}
 
 <div class="container bg-light shadow-md p-5 form-layout">
-<h1>register account</h1>
-<form method="POST"  enctype="multipart/form-data" autocomplete="off">
+<h1>update category</h1>
+<form method="POST" action="{% url 'Library:create_book' %}"  enctype="multipart/form-data"  autocomplete="off">
     {% csrf_token %}
     {{ form|crispy }}
-    <button type="submit" class="btn btn-outline-primary">register</button>
+    <button type="submit" class="btn btn-outline-primary">update</button>
 </form>
 
 </div>

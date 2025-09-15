@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Your Borrowed Books</h2>
+    
+
+    {% if borrowings %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Book Title</th>
+                    <th>Borrow Date</th>
+                    <th>Due Date</th> <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                           
+                {% for borrowing in borrowings %}
+                <tr>
+                    <td>
+                        <a href="{% url 'Library:book_detail' borrowing.book.pk %}">{{ borrowing.book.title }}</a>
+                    </td>
+                    <td>{{ borrowing.borrow_date|date:"d M Y" }}</td>
+                    <td>{{ borrowing.due_date|date:"d M Y" }}</td>
+                    
+                    <td>
+                        {% if borrowing.status == 'Late' %}
+                            <span class="badge bg-danger">{{ borrowing.status }}</span>
+                        {% elif borrowing.status == 'Returned' %}
+                            <span class="badge bg-success">{{ borrowing.status }}</span>
+                        {% else %}
+                            <span class="badge bg-warning text-dark">{{ borrowing.status }}</span>
+                        {% endif %}
+                    </td>
+                    
+                    <td>
+                        {% if not borrowing.return_date %}
+                        <form action="{% url 'Library:retrieve_book' borrowing.pk %}" method="POST" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-primary">Return Book</button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            
+            </tbody>
+        </table>
+    {% else %}
+        <p>You have not borrowed any books yet.</p>
+    {% endif %}
+
+    <a href="{% url 'Library:book_list' %}" class="btn btn-secondary mt-3">Back to Book List</a>
+</div>
+{% endblock %}

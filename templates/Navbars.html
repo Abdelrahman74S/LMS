@@ -14,9 +14,15 @@
         <li class="nav-item">
           <a class="nav-link" href="{% url 'account:login' %}">Login</a>
         </li>
+        {% if user.is_authenticated %}
         <li class="nav-item">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'account:profile' user.pk %}">profile</a>
+          </li>
+          <li>
           <a class="nav-link" href="{% url 'account:logout' %}">Logout</a>
         </li>
+        {% endif %}
       </ul>
         <form method="get" action="{% url 'Library:filter' %}" class="d-flex mb-3">
          <input class="form-control me-sm-2" type="search" name="q" placeholder="Search in books..." value="{{ request.GET.q }}">

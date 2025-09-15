@@ -12,6 +12,6 @@ class MyUserAdmin(UserAdmin):
         ("Extra Fields", {"fields": ("phone_number", "address","account_type" )}),
     )
 
-    list_display = ("username", "email", "phone_number", "account_type","address", "is_staff")
+    list_display = ("username", "email", "phone_number", "account_type","address",)
 
 admin.site.register(MyUser, MyUserAdmin)

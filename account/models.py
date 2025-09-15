@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser  , Group
 class MyUser(AbstractUser): 
     phone_number = models.CharField(max_length=11, blank=False, null=False) 
     address = models.CharField(max_length=100, blank=False, null=False) 
+    MyPhoto = models.ImageField(upload_to="MyPhoto/", null=True, blank=True)
     
     ACCOUNT_TYPES = [
         ('customer', 'Customer'),
@@ -11,21 +12,6 @@ class MyUser(AbstractUser):
     ]
     
     account_type = models.CharField(max_length=10, choices=ACCOUNT_TYPES , default='customer')
-
-    # def save(self, *args, **kwargs):
-    #     super().save(*args, **kwargs)  
-
-    #     if self.account_type == 'customer':
-    #         perms = Permission.objects.filter(
-    #             codename__in=['can_borrow_books', 'can_view_books']
-    #         )
-    #         self.user_permissions.set(perms)
-
-    #     elif self.account_type == 'seller':
-    #         perms = Permission.objects.filter(
-    #             codename__in=['can_borrow_books', 'can_view_books','can_add_books', 'can_delete_books', 'can_update_books']
-    #         )
-    #         self.user_permissions.set(perms)
     
     def save(self, *args, **kwargs):
          # Before getting ID
@@ -35,30 +21,11 @@ class MyUser(AbstractUser):
          super().save(*args, **kwargs)
          if is_new:
             if self.account_type == 'customer':
-               group = Group.objects.get(name='Customers')
+               group = Group.objects.get_or_create(name='Customers')
                self.groups.add(group)
             elif self.account_type == 'seller':
-                group = Group.objects.get(name='Sellers')
+                group = Group.objects.get_or_create(name='Sellers')
                 self.groups.add(group)
 
     def __str__(self): 
         return self.username 
-
-# class Customer(MyUser):
-#     class Meta:
-#         proxy = True
-#         permissions = [
-#           ('can_borrow_books' , 'Can borrow books'),
-#           ('can_view_books' , 'Can view books'),
-#         ]     
-        
-# class Seller(MyUser):
-#     class Meta:
-#         proxy = True
-#         permissions = [
-#           ('can_borrow_books' , 'Can borrow books'),
-#           ('can_view_books' , 'Can view books'),
-#           ('can_add_books' , 'Can add books'),
-#           ('can_delete_books' , 'Can delete books'),
-#           ('can_update_books' , 'Can update books'),
-#         ]    
