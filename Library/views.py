@@ -24,6 +24,13 @@ class CreateBOOK(SallerUserPassesTestMixin,CreateView):
     template_name = 'Library/create_book.html'
     success_url = reverse_lazy('Library:book_list')
     
+    def form_valid(self, form):
+
+        form.instance.owner = self.request.user
+        
+        return super().form_valid(form)
+
+    
 
 class BookListView(ListView):
     model = Book
@@ -51,18 +58,24 @@ class BookDetailView(LoginRequiredMixin,DetailView):
             context['user_has_borrowed_book'] = False
             
         return context
+    
 
 class BookUpdateView(SallerUserPassesTestMixin,UpdateView):
     model = Book
     form_class = BookForm
     template_name = "Library/update_book.html"
+    context_object_name = "book" 
+    
     
     def get_success_url(self):
         return reverse("Library:book_detail", kwargs={"pk": self.object.pk})
+    
 
 class BookDeleteView(SallerUserPassesTestMixin,DeleteView):
     model = Book
     success_url = reverse_lazy("Library:book_list")
+    
+    
 
 class BooktFilter(django_filters.FilterSet):
     q = django_filters.CharFilter(method='my_custom_filter', label="Search")
@@ -158,9 +171,9 @@ class BorrowingListView(LoginRequiredMixin,ListView):
     
     def get_queryset(self):
         user = self.request.user
+        
         if user.account_type == 'seller':
-            
-            return Borrowing.objects.all()
+            return Borrowing.objects.filter(book__owner=user)
         else:
             return Borrowing.objects.filter(borrower=user)
 

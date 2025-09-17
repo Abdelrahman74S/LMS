@@ -27,20 +27,17 @@
             <p class="card-text text-muted">{{ book.author }}</p>
             
             <div >
-              <a href="{% url 'Library:book_detail' book.pk %}" class="btn btn-outline-info">Details</a>
-              
-              {% if user.account_type == "seller" and book.seller == user %}
-              <form method="post" action="{% url 'Library:delete_book' book.pk %}" style="display:inline;">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-outline-danger">Delete</button>
-              </form>
-              {% endif %}
+              <a href="{% url 'Library:book_detail' book.pk %}" class="btn btn-outline-primary">View Details</a>
+
             </div>
           </div>
         </div>
       </div>
     {% empty %}
       <p class="text-center">No books available 📚</p>
+      <div class="text-center">
+      <a href="{% url 'Library:create_book' %}" class="btn btn-secondary btn-lg " style="width: fit-content;" >Create Book</a>
+      </div>
     {% endfor %}
   </div>
 </div>

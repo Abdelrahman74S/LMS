@@ -1,8 +1,9 @@
 from django.db import models
 from account.models import MyUser
 from django.utils import timezone
-# Create your models here.
+from cloudinary.models import CloudinaryField
 
+# Create your models here.
 
 class Category(models.Model):
     name = models.CharField(max_length=60 , blank=False, null=False)
@@ -19,18 +20,17 @@ class Book(models.Model):
     published_date = models.DateTimeField(auto_now_add=True)
     price = models.DecimalField(max_digits=6, decimal_places=2)
     copies_available = models.IntegerField(blank=False, null=False)
-    pdf = models.FileField(upload_to='pdfs/')
-    image = models.ImageField(upload_to="")
+    pdf = CloudinaryField('pdf', resource_type="auto" ,blank=True, null=True)
+    image = CloudinaryField('image', resource_type="auto", blank=True, null=True)
+    owner = models.ForeignKey(MyUser, on_delete=models.CASCADE)
+
     
     def __str__(self):
         return self.title
     
-# models.py
-
 class Borrowing(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     borrower = models.ForeignKey(MyUser, on_delete=models.CASCADE)
-    categoryBorrowing = models.ForeignKey(Category, on_delete=models.PROTECT, null=True, blank=True)
     borrow_date = models.DateTimeField(auto_now_add=True)
     return_date = models.DateTimeField(null=True, blank=True)
     due_date = models.DateTimeField()

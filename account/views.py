@@ -27,7 +27,6 @@ class RegisterView(CreateView):
 
         return super().form_valid(form)
 
-    
 class loginView(LoginView):
       form_class = LoginForm 
       template_name = "account/login.html"
