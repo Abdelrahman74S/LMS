@@ -4,7 +4,6 @@ from django.utils import timezone
 from cloudinary.models import CloudinaryField
 
 # Create your models here.
-
 class Category(models.Model):
     name = models.CharField(max_length=60 , blank=False, null=False)
     
